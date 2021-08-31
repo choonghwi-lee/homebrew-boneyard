@@ -14,9 +14,10 @@ class DynamodbLocal < Formula
     var/"log/dynamodb-local.log"
   end
 
-  def bin_wrapper; <<~EOS
-    #!/bin/sh
-    cd #{data_path} && exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar "$@"
+  def bin_wrapper
+    <<~EOS
+      #!/bin/sh
+      cd #{data_path} && exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar "$@"
     EOS
   end
 
@@ -30,40 +31,42 @@ class DynamodbLocal < Formula
     data_path.mkpath
   end
 
-  def caveats; <<~EOS
-    DynamoDB Local supports the Java Runtime Engine (JRE) version 6.x or
-    newer; it will not run on older JRE versions.
+  def caveats
+    <<~EOS
+      DynamoDB Local supports the Java Runtime Engine (JRE) version 6.x or
+      newer; it will not run on older JRE versions.
 
-    In this release, the local database file format has changed;
-    therefore, DynamoDB Local will not be able to read data files
-    created by older releases.
+      In this release, the local database file format has changed;
+      therefore, DynamoDB Local will not be able to read data files
+      created by older releases.
 
-    Data: #{data_path}
-    Logs: #{log_path}
+      Data: #{data_path}
+      Logs: #{log_path}
     EOS
   end
 
-  plist_options :manual => "#{HOMEBREW_PREFIX}/bin/dynamodb-local"
+  plist_options manual: "#{HOMEBREW_PREFIX}/bin/dynamodb-local"
 
-  def plist; <<~EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-    <plist version="1.0">
-    <dict>
-      <key>Label</key>
-      <string>#{plist_name}</string>
-      <key>RunAtLoad</key>
-      <true/>
-      <key>KeepAlive</key>
-      <false/>
-      <key>ProgramArguments</key>
-      <array>
-        <string>#{opt_bin}/dynamodb-local</string>
-      </array>
-      <key>StandardErrorPath</key>
-      <string>#{log_path}</string>
-    </dict>
-    </plist>
+  def plist
+    <<~EOS
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>Label</key>
+        <string>#{plist_name}</string>
+        <key>RunAtLoad</key>
+        <true/>
+        <key>KeepAlive</key>
+        <false/>
+        <key>ProgramArguments</key>
+        <array>
+          <string>#{opt_bin}/dynamodb-local</string>
+        </array>
+        <key>StandardErrorPath</key>
+        <string>#{log_path}</string>
+      </dict>
+      </plist>
     EOS
   end
 
