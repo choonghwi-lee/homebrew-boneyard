@@ -19,12 +19,11 @@ class DynamodbLocal < Formula
   def bin_wrapper
     <<~EOS
       #!/bin/sh
-      cd #{data_path} && exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar "$@"
+      cd #{data_path} && PATH="/opt/homebrew/opt/openjdk/bin:$PATH" exec java -Djava.library.path=#{libexec}/DynamodbLocal_lib -jar #{libexec}/DynamoDBLocal.jar "$@"
     EOS
   end
 
   def install
-    prefix.install %w[LICENSE.txt README.txt third_party_licenses]
     libexec.install %w[DynamoDBLocal_lib DynamoDBLocal.jar]
     (bin/"dynamodb-local").write(bin_wrapper)
   end
